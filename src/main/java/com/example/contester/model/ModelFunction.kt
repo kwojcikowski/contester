@@ -14,10 +14,10 @@ class ModelFunction(
 ) {
     companion object {
 
-        const val TAG_NAME = "model-function"
+        const val ATTRIBUTE_NAME = "model-function"
         fun fromDocumentElement(element: Element): ModelFunction {
-            if (TAG_NAME != element.tagName())
-                throw IllegalArgumentException("Provided element was not a '${TAG_NAME}' tag. Was ${element.tagName()} instead.")
+            if (!element.hasAttr(ATTRIBUTE_NAME))
+                throw IllegalArgumentException("Provided element does not have a '${ATTRIBUTE_NAME}' attribute: $element")
 
             return ModelFunction(
                 id = element.attr("id"),

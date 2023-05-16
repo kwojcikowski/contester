@@ -3,59 +3,50 @@ package com.example.contester.model
 import com.github.javaparser.ast.Modifier
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration
 import com.github.javaparser.ast.body.MethodDeclaration
-import com.github.javaparser.ast.expr.FieldAccessExpr
 import com.github.javaparser.ast.expr.MethodCallExpr
 import com.github.javaparser.ast.expr.ThisExpr
-import com.github.javaparser.ast.stmt.BlockStmt
-import com.github.javaparser.ast.stmt.ReturnStmt
 import org.jsoup.nodes.Element
-import osmo.tester.annotation.Variable
+
 
 class ModelAttribute(
     val id: String,
     val name: String,
-    val type: Class<*>,
+    val tag: String
 ) {
 
+    private val settableElements = arrayOf("input", "textarea")
+
     companion object {
-        const val TAG_NAME = "model-attribute"
-        private val simpleTypesToClasses = mapOf<String, Class<*>>(
-            "Integer" to Int::class.java
-        )
+        const val ATTRIBUTE_NAME = "model-attribute"
 
         fun fromDocumentElement(element: Element): ModelAttribute {
-            if (TAG_NAME != element.tagName())
-                throw IllegalArgumentException("Provided element was not a '${TAG_NAME}' tag. Was ${element.tagName()} instead.")
-
-            val type = simpleTypesToClasses[element.attr("type")]
-                ?: throw IllegalArgumentException("Type not supported: '${simpleTypesToClasses[element.attr("type")]}'")
+            if (!element.hasAttr(ATTRIBUTE_NAME))
+                throw IllegalArgumentException("Provided element does not have a '${ATTRIBUTE_NAME}' attribute: $element")
 
             return ModelAttribute(
                 id = element.attr("id"),
-                name = element.attr("name"),
-                type = type
+                name = element.attr("name").ifEmpty { element.attr("id") },
+                tag = element.tagName()
             )
-
         }
     }
 
-    fun addToClassModel(classModel: ClassOrInterfaceDeclaration, fetchAllBody: BlockStmt) {
-        classModel.addPrivateField(type, name)
-            .addAnnotation(Variable::class.java)
+    fun addToClassModel(classModel: ClassOrInterfaceDeclaration, fetchAllMethod: MethodDeclaration) {
+        val field = classModel.addPrivateField(String::class.java, name)
+        if (tag in settableElements) {
+            val setter = field.createSetter()
+            setter.createBody()
+                .addStatement("HtmlUtil.setElementValue(\"$id\", ${setter.parameters[0].name});")
+                .addStatement(MethodCallExpr(ThisExpr(), fetchAllMethod.name))
+        }
 
         val fetchMethod = classModel.addMethod("fetch${name.replaceFirstChar { it.uppercase() }}")
             .addModifier(Modifier.Keyword.PRIVATE)
         fetchMethod.createBody()
-            .addStatement("this.${name} = ${"this.webDriver.findElement(By.id(\"$id\")).getText()".asClass(type)};")
+            .addStatement("this.$name = HtmlUtil.getElementValue(\"$id\");")
 
-        fetchAllBody.addStatement(MethodCallExpr(ThisExpr(), fetchMethod.name))
-    }
-
-    private fun String.asClass(clazz: Class<*>): String {
-        return when (clazz) {
-            Int::class.java -> "Integer.parseInt($this)"
-            else -> this
-        }
+        fetchAllMethod.body.get()
+            .addStatement(MethodCallExpr(ThisExpr(), fetchMethod.name))
     }
 
 }
