@@ -1,0 +1,51 @@
+@startuml
+package org.example.contester {
+    [ContesterApplication]
+}
+
+package org.mdkt.compiler {
+    [InMemoryJavaCompiler]
+}
+
+package tudresden.ocl20.pivot {
+    [standalone.facade]
+}
+
+package net.kanstren.osmo {
+    [osmotester]
+}
+
+note left of net.kanstren.osmo
+This is only used
+when generating tests.
+User can also provide tests manually
+end note
+
+note as htmlNote
+Targeted HTML file must have
+model and constraints defined
+end note
+
+file website.html {
+}
+file "Model.java" {
+}
+file "ModelTests.java" {
+}
+file "Constraints .aj files" {
+}
+
+htmlNote .. website.html
+htmlNote .. websiteUrl
+websiteUrl <.. [ContesterApplication]: <<use>>
+website.html <.. [ContesterApplication]: <<use>>
+website.html <.> websiteUrl: <<or>>
+[InMemoryJavaCompiler] <.. [ContesterApplication]: <<use>>
+[standalone.facade] <.. [ContesterApplication]: <<use>>
+[osmotester] <.. [ContesterApplication]: <<use>>
+
+
+[ContesterApplication] ..> "Model.java": <<create>>
+[ContesterApplication] ..> "ModelTests.java": <<create>>
+[ContesterApplication] ..> "Constraints .aj files": <<create>>
+@enduml
