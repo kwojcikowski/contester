@@ -21,7 +21,7 @@ public class CounterModelTests {
         options.addArguments("--remote-allow-origins=*");
         webDriver = new ChromeDriver(options);
         sut = new CounterModel(webDriver);
-        webDriver.get("http://localhost:3000");
+        webDriver.get("http://localhost:3000/counter");
     }
 
     @AfterEach()
