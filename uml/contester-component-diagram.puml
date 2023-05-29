@@ -1,10 +1,6 @@
-@startuml
+@startuml contester-component-diagram
 package org.example.contester {
     [ContesterApplication]
-}
-
-package org.mdkt.compiler {
-    [InMemoryJavaCompiler]
 }
 
 package tudresden.ocl20.pivot {
@@ -15,7 +11,7 @@ package net.kanstren.osmo {
     [osmotester]
 }
 
-note left of net.kanstren.osmo
+note top of net.kanstren.osmo
 This is only used
 when generating tests.
 User can also provide tests manually
@@ -28,11 +24,11 @@ end note
 
 file website.html {
 }
-file "Model.java" {
+file Model.java {
 }
-file "ModelTests.java" {
+file ModelTests.java {
 }
-file "Constraints .aj files" {
+file "Constraints .aj files" as aj {
 }
 
 htmlNote .. website.html
@@ -40,12 +36,11 @@ htmlNote .. websiteUrl
 websiteUrl <.. [ContesterApplication]: <<use>>
 website.html <.. [ContesterApplication]: <<use>>
 website.html <.> websiteUrl: <<or>>
-[InMemoryJavaCompiler] <.. [ContesterApplication]: <<use>>
 [standalone.facade] <.. [ContesterApplication]: <<use>>
 [osmotester] <.. [ContesterApplication]: <<use>>
 
 
-[ContesterApplication] ..> "Model.java": <<create>>
-[ContesterApplication] ..> "ModelTests.java": <<create>>
-[ContesterApplication] ..> "Constraints .aj files": <<create>>
+[ContesterApplication] ..> Model.java: <<create>>
+[ContesterApplication] ..> ModelTests.java: <<create>>
+[ContesterApplication] ..> aj: <<create>>
 @enduml
