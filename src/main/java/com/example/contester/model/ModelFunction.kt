@@ -33,10 +33,8 @@ class ModelFunction(
         classModel.addMethod(name)
             .setPublic(true)
             .addSingleMemberAnnotation(TestStep::class.java, "\"$name\"")
-            .addThrownException(InterruptedException::class.java)
             .createBody()
-            .addStatement("this.webDriver.findElement(By.id(\"$id\")).click();")
-            .addStatement("Thread.sleep(200);")
+            .addStatement("HtmlUtil.clickElement(\"$id\");")
             .addStatement(MethodCallExpr(ThisExpr(), fetchAllMethod.name))
     }
 

@@ -4,6 +4,7 @@ import com.example.contester.config.ContesterProperties
 import com.example.contester.generator.TestCaseGenerator
 import com.example.contester.generator.TestModelGenerator
 import com.example.contester.model.Model
+import com.example.contester.provider.FileDocumentProvider
 import com.example.contester.provider.WebDocumentProvider
 import org.mdkt.compiler.InMemoryJavaCompiler
 import tudresden.ocl20.pivot.language.ocl.resource.ocl.Ocl22Parser
@@ -18,7 +19,7 @@ class ContesterApplication {
 
             StandaloneFacade.INSTANCE.initialize(this::class.java.getResource(properties.log4jPropertiesPath))
             val url = args[0]
-            val docProvider = WebDocumentProvider()
+            val docProvider = if (url.contains("http")) WebDocumentProvider() else FileDocumentProvider()
 
             docProvider.get(url) // 1. Get HTML file
                 .getElementsByAttribute(Model.ATTRIBUTE_NAME)
@@ -43,16 +44,26 @@ class ContesterApplication {
                     settings.sourceDirectory = properties.oclSrcPath
                     settings.setDefaultInvariantCheckMode(2)
                     StandaloneFacade.INSTANCE.generateAspectJCode(constraints, settings)
-                    it.first
+                    it
                 }
                 .toList()
-                .forEach { // 6. Generate test cases
-                    TestCaseGenerator.generateProvidedTestCases(
-                        it.model,
-                        url,
-                        properties.testCaseGenerationPath + "/${it.model.name.lowercase()}",
-                        properties.testCaseGenerationPackage + ".${it.model.name.lowercase()}"
-                    )
+                .forEach { (generatorOutput, compiledClass) ->// 6. Generate test cases
+                    if(generatorOutput.model.tests.isEmpty()) {
+                        TestCaseGenerator.generateTestCases(
+                            generatorOutput.model,
+                            compiledClass,
+                            url,
+                            properties.testCaseGenerationPath + "/${generatorOutput.model.name.lowercase()}",
+                            properties.testCaseGenerationPackage + ".${generatorOutput.model.name.lowercase()}"
+                        )
+                    } else {
+                        TestCaseGenerator.generateProvidedTestCases(
+                            generatorOutput.model,
+                            url,
+                            properties.testCaseGenerationPath + "/${generatorOutput.model.name.lowercase()}",
+                            properties.testCaseGenerationPackage + ".${generatorOutput.model.name.lowercase()}"
+                        )
+                    }
                 }
 
             // 7. Run tests and enjoy :)
