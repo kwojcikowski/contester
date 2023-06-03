@@ -3,42 +3,42 @@ package org.example.contester {
     [ContesterApplication]
 }
 
-' package org.dresdenocl {
-'     [standalone.facade]
-' }
+package org.dresdenocl {
+    [standalone.facade]
+}
 
-' package net.kanstren.osmo {
-'     [osmotester]
-' }
+package net.kanstren.osmo {
+    [osmotester]
+}
 
-' note top of net.kanstren.osmo
-' This is only used
-' when generating tests.
-' User can also provide tests manually
-' end note
+note top of net.kanstren.osmo
+This is only used
+when generating tests.
+User can also provide tests manually
+end note
 
 note as htmlNote
 Targeted HTML file must have
 model and constraints defined
 end note
 
-' file Model.java {
-' }
-' file ModelTests.java {
-' }
-' file "Constraints .aj files" as aj {
-' }
+file Model.java {
+}
+file ModelTests.java {
+}
+file "Constraints .aj files" as aj {
+}
 
 htmlNote .. htmlFilePath
 htmlNote .. websiteUrl
 websiteUrl <.. [ContesterApplication]: <<use>>
 htmlFilePath <.. [ContesterApplication]: <<use>>
 htmlFilePath <.> websiteUrl: \t<<or>>\t
-' [standalone.facade] <.. [ContesterApplication]: <<use>>
-' [osmotester] <.. [ContesterApplication]: <<use>>
+[standalone.facade] <.. [ContesterApplication]: <<use>>
+[osmotester] <.. [ContesterApplication]: <<use>>
 
 
-' [ContesterApplication] ..> Model.java: <<create>>
-' [ContesterApplication] ..> ModelTests.java: <<create>>
-' [ContesterApplication] ..> aj: <<create>>
+[ContesterApplication] ..> Model.java: <<create>>
+[ContesterApplication] ..> ModelTests.java: <<create>>
+[ContesterApplication] ..> aj: <<create>>
 @enduml
