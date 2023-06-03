@@ -1,0 +1,35 @@
+@startuml contester-metamodel-class-diagram
+
+class Model {
+    name : String
+}
+
+class ModelAttribute {
+    id : String
+    name : String
+    tag : String
+}
+
+class ModelFunction {
+    id : String 
+    name : String
+}
+
+class Constraint {
+    text : String
+}
+
+class Test {
+    name : String
+    content : String
+}
+
+Model "1" -- "*" ModelAttribute
+Model "1" -- "*" ModelFunction
+Model "1" -- "*" Constraint
+Model "1" -- "*" Test
+
+ModelFunction "1" -- "*" Constraint
+ModelAttribute "1" -- "*" Constraint
+
+@enduml
