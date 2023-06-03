@@ -1,19 +1,12 @@
 @startuml
 start
-:Get HTML file from filesystem or URL;
-:Parse HTML using Jsoup;
+:Get and parse HTML document;
 :Create metadata model for each model defined in HTML;
 :Generate .java models based on gathered metadata;
 :Compile .java models;
 :Parse constraints defined in HTML
 against compiled .java models;
 :Generate constraints as .aj files;
-if (Generate test cases) then (true)
-    :Generate test cases
-    using OSMO generator;
-else (no)
-    :Rewrite user defined test cases
-    into template .java test case file(s);
-endif
+:Generate test cases;
 stop
 @enduml
