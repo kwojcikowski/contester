@@ -33,7 +33,7 @@ class ContesterApplication {
                 } // 3. Generate java test model class
                 .map { // 4. Compile java test model class
                     val compiledModelClass = InMemoryJavaCompiler.newInstance()
-                        .compile(properties.modelGenerationPackage + ".${it.model.name}", it.code)
+                        .compile(properties.modelGenerationPackage + ".${it.model.name.lowercase()}.${it.model.name}", it.code)
                     Pair(it, compiledModelClass)
                 }
                 .map { // 5. Generate constraints as AspectJ files

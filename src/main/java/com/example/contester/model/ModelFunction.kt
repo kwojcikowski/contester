@@ -21,7 +21,7 @@ class ModelFunction(
 
             return ModelFunction(
                 id = element.attr("id"),
-                name = element.attr("name"),
+                name = element.attr(ATTRIBUTE_NAME),
                 constraints = element.children()
                     .filter { child -> child.tagName().equals(Constraint.TAG_NAME) }
                     .map { Constraint.fromDocumentElement(it) }

@@ -13,7 +13,7 @@ object TestModelGenerator {
         model.addToCompilationUnit(compilationUnit)
         val sourceCode = compilationUnit.toString()
         FileUtils.writeStringToFile(File("${destPath}/${model.name}.java"), sourceCode, "UTF-8")
-        return GeneratorOutput(model, sourceCode, model.getConstraintsAsString(null))
+        return GeneratorOutput(model, sourceCode, model.getConstraintsAsString())
     }
 
 }

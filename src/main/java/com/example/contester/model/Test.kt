@@ -2,7 +2,10 @@ package com.example.contester.model
 
 import org.jsoup.nodes.Element
 
-class Test(val name: String, val content: String) {
+class Test(
+    val name: String,
+    val content: String
+) {
 
     companion object {
         const val TAG_NAME = "test"
