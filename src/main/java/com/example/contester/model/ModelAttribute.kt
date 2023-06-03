@@ -26,7 +26,7 @@ class ModelAttribute(
 
             return ModelAttribute(
                 id = element.attr("id"),
-                name = element.attr("name").ifEmpty { element.attr("id") },
+                name = element.attr(ATTRIBUTE_NAME),
                 tag = element.tagName(),
                 constraints = element.children()
                     .filter { child -> child.tagName().equals(Constraint.TAG_NAME) }

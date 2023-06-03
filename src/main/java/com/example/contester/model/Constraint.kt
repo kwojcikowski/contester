@@ -6,7 +6,7 @@ data class Constraint(
     val text: String
 ) {
     companion object {
-        val TAG_NAME = "constraint"
+        const val TAG_NAME = "constraint"
 
         fun fromDocumentElement(element: Element): Constraint =
             if (TAG_NAME != element.tagName())

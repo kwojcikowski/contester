@@ -24,7 +24,7 @@ class Model(
             if (!element.hasAttr(ATTRIBUTE_NAME))
                 throw IllegalArgumentException("Provided element does not have a '${ATTRIBUTE_NAME}' attribute: $element")
             else Model(
-                name = element.attr("name"),
+                name = element.attr(ATTRIBUTE_NAME),
                 attributes = element.getElementsByAttribute(ModelAttribute.ATTRIBUTE_NAME)
                     .map { ModelAttribute.fromDocumentElement(it) },
                 functions = element.getElementsByTag(ModelFunction.ATTRIBUTE_NAME)
