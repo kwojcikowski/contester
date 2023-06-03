@@ -62,8 +62,9 @@ class Model(
             .addStatement("return HtmlUtil.getElementAttribute(elementId, attributeName);")
     }
 
-    fun getConstraintsAsString(parentContext: String?): String =
+    fun getConstraintsAsString(): String =
         constraints.joinToString("\n") { "context $name ${it.text}" } + "\n" +
+                attributes.joinToString("\n") { it.getConstraintsAsString("context $name") } + "\n" +
                 functions.joinToString("\n") { it.getConstraintsAsString("context $name") }
 
 }

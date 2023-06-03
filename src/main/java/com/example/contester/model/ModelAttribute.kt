@@ -11,7 +11,8 @@ import org.jsoup.nodes.Element
 class ModelAttribute(
     val id: String,
     val name: String,
-    val tag: String
+    val tag: String,
+    val constraints: List<Constraint>
 ) {
 
     private val settableElements = arrayOf("input", "textarea")
@@ -26,7 +27,10 @@ class ModelAttribute(
             return ModelAttribute(
                 id = element.attr("id"),
                 name = element.attr("name").ifEmpty { element.attr("id") },
-                tag = element.tagName()
+                tag = element.tagName(),
+                constraints = element.children()
+                    .filter { child -> child.tagName().equals(Constraint.TAG_NAME) }
+                    .map { Constraint.fromDocumentElement(it) }
             )
         }
     }
@@ -48,5 +52,8 @@ class ModelAttribute(
         fetchAllMethod.body.get()
             .addStatement(MethodCallExpr(ThisExpr(), fetchMethod.name))
     }
+
+    fun getConstraintsAsString(parentContext: String?): String =
+        constraints.joinToString("\n") { "$parentContext::$name() ${it.text}" }
 
 }
