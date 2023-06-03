@@ -1,0 +1,41 @@
+@startuml
+|ContesterApplication|
+start
+if (URL is remote?) is (No) then
+:Get HTML document
+from local filesystem;
+else (Yes)
+|Selenium|
+:Get HTML document
+from website;
+endif
+|JSoup|
+:Parse HTML document
+into DOM nodes;
+|ContesterApplication|
+:Create metadata instance
+for each model defined in HTML;
+|JavaParser|
+:Generate .java models
+based on gathered metadata;
+|InMemoryJavaCompiler|
+:Compile .java models;
+|Dresden OCL Standalone|
+:Parse constraints defined in HTML
+against compiled .java models;
+:Generate constraints as .aj files;
+|ContesterApplication|
+if (Tests specified manually?) is (Yes) then
+:Copy manual tests
+into test cases;
+else (No)
+|OsmoTester|
+:Generate test steps;
+|ContesterApplication|
+:Put test steps
+into test cases;
+endif
+|ContesterApplication|
+:Save test cases;
+stop
+@enduml

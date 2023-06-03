@@ -1,44 +1,106 @@
 @startuml contester-component-diagram
-package org.example.contester {
-    [ContesterApplication]
+allow_mixing
+
+package org.example.contester as contesterPackage {
+    component ContesterApplication
 }
 
-package org.dresdenocl {
-    [standalone.facade]
+package org.seleniumhq.selenium as seleniumPackage {
+    component "selenium-java" as selenium
 }
 
-package net.kanstren.osmo {
-    [osmotester]
+package org.jsoup as jsoupPackage {
+    component jsoup
 }
 
-note top of net.kanstren.osmo
-This is only used
-when generating tests.
-User can also provide tests manually
-end note
-
-note as htmlNote
-Targeted HTML file must have
-model and constraints defined
-end note
-
-file Model.java {
-}
-file ModelTests.java {
-}
-file "Constraints .aj files" as aj {
+package com.github.javaparser as parserPackage {
+    component "javaparser-core" as parser
 }
 
-htmlNote .. htmlFilePath
-htmlNote .. websiteUrl
-websiteUrl <.. [ContesterApplication]: <<use>>
-htmlFilePath <.. [ContesterApplication]: <<use>>
+package org.mdkt.compiler as compilerPackage {
+    component InMemoryJavaCompiler
+}
+
+package org.dresdenocl as oclPackage {
+    component standalone
+}
+
+package net.kanstren.osmo as osmoPackage {
+    component osmotester
+}
+
+'note as osmoNote
+'This is only used
+'when generating tests.
+'User can also provide tests manually
+'end note
+'
+'osmotester -u- osmoNote
+
+file application.properties as config {
+}
+artifact "Model.java" as artifactModel
+artifact "ModelTests.java" as artifactModelTests
+artifact "Constraints .aj files" as artifactAj
+
+'file "HTML file" as htmlFile
+circle websiteUrl
+circle htmlFilePath
+
+'note as htmlNote
+'Targeted HTML file must have
+'model and constraints defined
+'end note
+
+'htmlFile <.. websiteUrl: points to
+'htmlFile <.. htmlFilePath: points to
+'htmlNote .r. htmlFile
+
+
+object "HTML source" as htmlSource
+object "DOM model" as domModel
+object "Metamodel" as metamodel
+object "Compiled model class" as compiledModel
+collections "Test steps" as testSteps
+
+' Inputs
+config <.. ContesterApplication : <<input>>
+websiteUrl <.. ContesterApplication: <<input>>
+htmlFilePath <.. ContesterApplication: <<input>>
 htmlFilePath <.> websiteUrl: \t<<or>>\t
-[standalone.facade] <.. [ContesterApplication]: <<use>>
-[osmotester] <.. [ContesterApplication]: <<use>>
 
+' HTML file retrieve
+ContesterApplication ..> selenium: <<run>>
+selenium ..> htmlSource: <<output>>
 
-[ContesterApplication] ..> Model.java: <<create>>
-[ContesterApplication] ..> ModelTests.java: <<create>>
-[ContesterApplication] ..> aj: <<create>>
+' HTML parse into metamodel
+ContesterApplication .d.> jsoup: <<run>>
+jsoup ..> htmlSource: <<input>>
+jsoup ..> domModel: <<output>>
+ContesterApplication .d.> domModel: <<use>>
+ContesterApplication ..> metamodel: <<create>>
+
+' Generate java model
+ContesterApplication ..> parser: <<run>>
+parser ..> metamodel: <<input>>
+parser ..> artifactModel: <<output>>
+
+' Compile java model
+ContesterApplication ..> InMemoryJavaCompiler: <<run>>
+InMemoryJavaCompiler ...> artifactModel: <<input>>
+InMemoryJavaCompiler ..> compiledModel: <<output>>
+
+' Generate AspectJ
+ContesterApplication ..> standalone: <<run>>
+standalone ..> compiledModel: <<input>>
+standalone ..> metamodel: <<input>>
+standalone ...> artifactAj: <<output>>
+
+' Generate test cases
+ContesterApplication ..> osmotester: <<run>>
+osmotester ..> compiledModel: <<input>>
+osmotester ..> testSteps: <<output>>
+ContesterApplication ..> testSteps: <<use>>
+ContesterApplication ....> artifactModelTests: <<output>>
+
 @enduml
