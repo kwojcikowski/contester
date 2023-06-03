@@ -35,5 +35,4 @@ build/
 ### Custom ###
 logs
 osmo-output
-src/main/resources/application.properties
 out
