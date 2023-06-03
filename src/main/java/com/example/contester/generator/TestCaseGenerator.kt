@@ -30,13 +30,24 @@ class TestCaseGenerator {
 
     companion object {
 
-        fun generateTestCases(model: Model, url: String, destPath: String, packageName: String) {
+        fun generateTestCases(model: Model, compiledModel: Class<*>, url: String, destPath: String, packageName: String) {
+            WebDriverManager.chromedriver().setup()
+            val options = ChromeOptions()
+            options.addArguments("--remote-allow-origins=*")
+            val webDriver = ChromeDriver(options)
+
             val tester = MyOSMOTester();
             val oc: OSMOConfiguration = tester.config
             oc.setAlgorithm(BalancingAlgorithm())
             oc.setTestEndCondition(LengthProbability(5, 10, 0.2))
+            try {
+                HtmlUtil.webDriver = webDriver
+                webDriver.get(url)
+                oc.factory = SingleInstanceModelFactory().also { it.add(compiledModel.declaredConstructors.first().newInstance()) }
+            } finally {
+                webDriver.close()
+            }
             oc.suiteEndCondition = Length(5)
-            oc.factory = SingleInstanceModelFactory().also { it.add(Class.forName(model.name).declaredConstructors.first().newInstance(null)) }
             tester.generate(112)
 
             val compilationUnit = CompilationUnit()

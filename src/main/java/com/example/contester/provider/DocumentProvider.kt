@@ -15,11 +15,6 @@ interface DocumentProvider {
 }
 
 class FileDocumentProvider: DocumentProvider {
-
-    companion object {
-        val COUNTER_HTML_FILE_PATH = this::class.java.getResource("/static/counter.html")!!.path
-        val SIGNUP_HTML_FILE_PATH = this::class.java.getResource("/static/signup.html")!!.path
-    }
     override fun get(location: String): Document {
         return try {
             Jsoup.parse(File(location))

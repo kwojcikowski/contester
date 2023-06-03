@@ -27,7 +27,7 @@ class Model(
                 name = element.attr(ATTRIBUTE_NAME),
                 attributes = element.getElementsByAttribute(ModelAttribute.ATTRIBUTE_NAME)
                     .map { ModelAttribute.fromDocumentElement(it) },
-                functions = element.getElementsByTag(ModelFunction.ATTRIBUTE_NAME)
+                functions = element.getElementsByAttribute(ModelFunction.ATTRIBUTE_NAME)
                     .map { ModelFunction.fromDocumentElement(it) },
                 constraints = element.children()
                     .filter { child -> child.tagName().equals(Constraint.TAG_NAME) }

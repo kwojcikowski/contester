@@ -18,6 +18,7 @@ class HtmlUtil {
             val element = webDriver.findElement(By.id(elementId))
             return when(element.tagName) {
                 "p" -> element.text
+                "span" -> element.text
                 else -> element.getAttribute("value")
             }
         }
@@ -30,6 +31,12 @@ class HtmlUtil {
             elem.clear()
             elem.sendKeys(content)
             blur()
+        }
+
+        @JvmStatic
+        fun clickElement(elementId: String) {
+            val element = webDriver.findElement(By.id(elementId))
+            element.click()
         }
 
         private fun blur() {

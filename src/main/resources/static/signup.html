@@ -165,17 +165,21 @@
 <div id="root">
     <div class="login">
         <div class="form">
-            <form name="SignupModel" novalidate="" model="">
+            <form novalidate="" model="Signup">
                 <span>Signup</span>
-                <input type="email" name="email" placeholder="Enter email id / username" class="form-control inp_text" id="email" value="player1" model-attribute="">
-                <p id="emailErrorMessage" class="error" model-attribute=""></p>
-                <input id="password" type="password" name="password" placeholder="Enter password" class="form-control" value="password" model-attribute="">
-                <p id="passwordErrorMessage" class="error" model-attribute=""></p>
-                <input id="confirmPassword" type="password" name="confirmPassword" placeholder="Confirm password" class="form-control" value="" model-attribute="">
-                <p id="confirmPasswordErrorMessage" class="error" model-attribute=""></p>
-                <input id="age" type="number" name="age" placeholder="Enter age" class="form-control" value="0" model-attribute="">
-                <p id="ageErrorMessage" class="error" model-attribute=""></p>
-                <button id="submitButton" type="submit" disabled="">Sign Up</button>
+                <input class="form-control inp_text" id="email" model-attribute="email" name="email"
+                       placeholder="Enter email id / username" type="email" value="player1">
+                <p class="error" id="emailErrorMessage" model-attribute="emailErrorMessage"></p><input
+                    class="form-control" id="password" model-attribute="password" name="password"
+                    placeholder="Enter password" type="password" value="password">
+                <p class="error" id="passwordErrorMessage" model-attribute="passwordErrorMessage"></p><input
+                    class="form-control" id="confirmPassword" model-attribute="confirmPassword" name="confirmPassword"
+                    placeholder="Confirm password" type="password" value="">
+                <p class="error" id="confirmPasswordErrorMessage" model-attribute="confirmPasswordErrorMessage"></p>
+                <input class="form-control" id="age" model-attribute="age" name="age" placeholder="Enter age"
+                       type="number" value="0">
+                <p class="error" id="ageErrorMessage" model-attribute="ageErrorMessage"></p>
+                <button disabled="" id="submitButton" type="submit">Sign Up</button>
                 <constraint>
                     inv errorIsDisplayedWhenPasswordIsTooShort:
                         self.password &lt;&gt; '' and self.password.size() &lt; 8
