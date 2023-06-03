@@ -36,9 +36,9 @@ class WebDocumentProvider: DocumentProvider {
         val options = ChromeOptions()
         options.addArguments("--remote-allow-origins=*")
         val webDriver = ChromeDriver(options)
-        webDriver.get(location)
-        val source = webDriver.pageSource
         return try {
+            webDriver.get(location)
+            val source = webDriver.pageSource
             Jsoup.parse(source)
         } catch (e: IOException) {
             throw RuntimeException(e)
