@@ -1,13 +1,12 @@
 @startuml contester-metamodel-class-diagram
 
-class Model {
+class "ViewModel" as Model {
     name : String
 }
 
 class ModelAttribute {
     id : String
     name : String
-    tag : String
 }
 
 class ModelFunction {
@@ -15,21 +14,21 @@ class ModelFunction {
     name : String
 }
 
-class Constraint {
-    text : String
-}
-
-class Test {
+class "TestInputs" as Test {
     name : String
     content : String
 }
 
-Model "1" -- "*" ModelAttribute
-Model "1" -- "*" ModelFunction
-Model "1" -- "*" Constraint
-Model "1" -- "*" Test
+class Constraint {
+    text : String
+}
 
-ModelFunction "1" -- "*" Constraint
-ModelAttribute "1" -- "*" Constraint
+Model *-- "*" ModelAttribute
+Model *-- "*" ModelFunction
+Model "0..1" *-- "*" Constraint
+Model *-- "*" Test
+
+ModelFunction "0..1" *-- "*" Constraint
+ModelAttribute "0..1" *-- "*" Constraint
 
 @enduml

@@ -1,4 +1,4 @@
-@startuml
+@startuml contester-activity-diagram
 |ContesterApplication|
 start
 if (URL is remote?) is (No) then
@@ -20,7 +20,7 @@ for each model defined in HTML;
 based on gathered metadata;
 |InMemoryJavaCompiler|
 :Compile .java models;
-|Dresden OCL Standalone|
+|DresdenOCL|
 :Parse constraints defined in HTML
 against compiled .java models;
 :Generate constraints as .aj files;
